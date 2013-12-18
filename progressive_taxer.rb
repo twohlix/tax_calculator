@@ -35,7 +35,7 @@ class ProgressiveTaxer
 
     # empty taxes case
     if index_to_insert_after.nil?
-      @taxes << new_tax
+      @taxes.insert 0, new_tax
       return true
     end
 

@@ -24,6 +24,15 @@ describe ProgressiveTaxer do
       expect(@taxer.tax 5000).to eq(250)
       expect(@taxer.tax 10000).to eq(650)
     end
+
+    it "accepts tax amounts in any order" do
+      @taxer.add_tax 6000, 0.1
+      expect(@taxer.tax 5000).to eq(0)
+      expect(@taxer.tax 7000).to eq(100)
+      @taxer.add_tax 0, 0.05
+      expect(@taxer.tax 5000).to eq(250)
+      expect(@taxer.tax 7000).to eq(400)
+    end
   end
 
   context "taxes added from file" do
