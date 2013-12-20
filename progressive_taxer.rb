@@ -52,6 +52,9 @@ class ProgressiveTaxer
 
   # returns the tax on an income given this tax table
   def tax income
+    income = 0 if income.nil?
+    income = income.to_f if income.kind_of? String
+
     total_tax = 0
     working_income = income
     @taxes.reverse.each do |tax|

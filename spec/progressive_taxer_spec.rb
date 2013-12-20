@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ProgressiveTaxer do
-  context "no taxes on init" do
+  context "default initialization" do
     before :each do
       @taxer = ProgressiveTaxer.new
     end
@@ -33,6 +33,18 @@ describe ProgressiveTaxer do
       expect(@taxer.tax 5000).to eq(250)
       expect(@taxer.tax 7000).to eq(400)
     end
+
+    it "allows tax rates to be overwritten" do
+      @taxer.add_tax 0, 0.05
+      expect(@taxer.tax 1000).to eq(50)
+      @taxer.add_tax 0, 0.10
+      expect(@taxer.tax 1000).to eq(100)
+    end
+
+    it "accepts income as a string" do
+      @taxer.add_tax 0, 0.05
+      expect(@taxer.tax "1000").to eq(50)
+    end
   end
 
   context "taxes added from file" do
@@ -44,7 +56,7 @@ describe ProgressiveTaxer do
       expect(@taxer.tax 123000).to_not eq(0)
     end
 
-    it "should provide a correct tax" do
+    it "provides a correct tax" do
       expect(@taxer.tax 5000).to eq(500)
       expect(@taxer.tax 8925).to eq(892.5)
       expect(@taxer.tax 36250).to eq(4991.25)
