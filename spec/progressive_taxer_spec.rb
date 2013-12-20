@@ -45,6 +45,22 @@ describe ProgressiveTaxer do
       @taxer.add_tax 0, 0.05
       expect(@taxer.tax "1000").to eq(50)
     end
+
+    it "provides marginal tax rates" do
+      @taxer.add_tax 0, 0.05
+      @taxer.add_tax 50000, 0.12
+      expect(@taxer.marginal_tax_rate 0).to eq(0.05)
+      expect(@taxer.marginal_tax_rate 10000).to eq(0.05)
+      expect(@taxer.marginal_tax_rate 67000).to eq(0.12)
+    end
+
+    it "provides effective tax rates" do
+      @taxer.add_tax 0, 0.05
+      @taxer.add_tax 50000, 0.12
+      expect(@taxer.effective_tax_rate 0).to eq(0.05)
+      expect(@taxer.effective_tax_rate 10000).to eq(0.05)
+      expect(@taxer.effective_tax_rate(67000).round 5 ).to eq(0.06776)
+    end
   end
 
   context "taxes added from file" do

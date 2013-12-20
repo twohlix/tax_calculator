@@ -52,8 +52,7 @@ class ProgressiveTaxer
 
   # returns the tax on an income given this tax table
   def tax income
-    income = 0 if income.nil?
-    income = income.to_f if income.kind_of? String
+    income = fix_income income
 
     total_tax = 0
     working_income = income
@@ -66,6 +65,34 @@ class ProgressiveTaxer
     end
 
     return total_tax
+  end
+
+  # returns the uppermost bracket rate for a given income
+  def marginal_tax_rate income
+    income = fix_income income
+
+    @taxes.reverse.each do |tax|
+      return tax[:rate] if income >= tax[:min_income]
+    end
+
+    0 #default tax rate
+  end
+
+  # returns the effective tax rate on an income
+  def effective_tax_rate income
+    income = fix_income income
+
+    return marginal_tax_rate income if income == 0 #avoid our later divide by zero
+
+    (tax income) / income 
+  end
+
+  private
+  def fix_income income
+    income = 0 if income.nil?
+    income = income.to_f if income.kind_of? String
+
+    income
   end
 
 end 
